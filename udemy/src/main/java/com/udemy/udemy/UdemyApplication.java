@@ -1,16 +1,15 @@
-package com.proyecto.proyecto;
+package com.udemy.udemy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
-public class ProyectoApplication {
+public class UdemyApplication {
 
 	public static void main(String[] args) {
-		ApplicationContext content = SpringApplication.run(ProyectoApplication.class, args);
-		Alien al = content.getBean(Alien.class);
-		al.code();
+		ApplicationContext c = SpringApplication.run(UdemyApplication.class, args);
+		c.getBean(Alien.class).code();
 	}
 
 }
