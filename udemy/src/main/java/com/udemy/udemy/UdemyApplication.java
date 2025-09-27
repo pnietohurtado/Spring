@@ -14,7 +14,7 @@ public class UdemyApplication {
 		ApplicationContext c = SpringApplication.run(UdemyApplication.class, args);
 		//c.getBean(Alien.class).code();
 
-		LaptopService service = c.getBean(LaptopService.class);
+		LaptopService service = c.getBean( LaptopService.class);
 
 		Laptop lap = c.getBean(Laptop.class);
 		service.addLaptop(lap);
