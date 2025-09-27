@@ -1,9 +1,9 @@
-package com.udemy.udemy;
+package com.udemy.udemy.model;
 
 import org.springframework.stereotype.Component;
 
 @Component
-public class Laptop {
+public class Laptop implements Computer {
     public void compile(){
         System.out.println("Start compiling in the Laptop!");
     }
