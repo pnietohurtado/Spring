@@ -54,10 +54,22 @@ public class CustomerRestController {
                 c1.setName(c.getName());
                 c1.setUser_name(c.getUser_name());
                 c1.setPass(c.getPass());
-                return c1; 
+                return c1;
             }
         }
         return c;
+    }
+
+    @DeleteMapping("/customers/delete/{id}")
+    public Customer deleteCustomer(@PathVariable int id){
+        Iterator<Customer> it = customers.iterator();
+        while(it.hasNext()){
+            Customer c1 = (Customer) it.next();
+            if(c1.getId() == id){
+                customers.remove(c1);
+            }
+        }
+        return null;
     }
 
 }
