@@ -35,7 +35,7 @@ public class StudentRepository {
     public List<Student> findAll() {
         String sql = "select * from student where rollno <> ?";
 
-        
+
         RowMapper<Student> mapper = new RowMapper<Student>() {
             public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
 
