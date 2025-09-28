@@ -5,12 +5,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+/*
+* Controller to verify palidromes
+* */
+
 @RestController
 public class PalindromeRestController {
 
+    /*
+    * @param word The word in order to verify
+    * @return A message to show if the word is a palindrome or not
+    * */
     @GetMapping({"/prove-palindrome/{word}"})
     public String isPalindrome(@PathVariable String word) {
-        System.out.println("SomeThing went weong!");
         if(isPalidrome(word)){
             return "The word " + word + " is a palindrome.";
         }else{
@@ -18,12 +25,12 @@ public class PalindromeRestController {
         }
     }
 
-    /*
+
     @GetMapping("/error")
     public String error(){
         return "No se ha podido encontrar la palabra" ;
     }
-    */
+
 
     private boolean isPalidrome(String word){
         int length = word.length();
