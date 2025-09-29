@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @RestController
+@RequestMapping("/customers")
 public class CustomerRestController {
 
     private List<Customer> customers = new ArrayList<>(Arrays.asList(
@@ -19,12 +20,12 @@ public class CustomerRestController {
             new Customer(4, "Jose" , "ong0002", "123")
             ));
 
-    @GetMapping("/customers")
+    @GetMapping
     public List<Customer> getCustomers(){
         return customers;
     }
 
-    @GetMapping("/customers/{name}")
+    @GetMapping("/{name}")
     public Customer getCustomer(@PathVariable String name){
         Iterator it = customers.iterator();
         while(it.hasNext()){
@@ -37,7 +38,7 @@ public class CustomerRestController {
     }
 
 
-    @PostMapping("/customers/u")
+    @PostMapping("/customers")
     public Customer postCustomer(@RequestBody Customer c){
         System.out.println("New customer added, Welcome " + c.getName() + "! ");
         customers.add(c);
@@ -45,7 +46,7 @@ public class CustomerRestController {
     }
 
 
-    @PutMapping("/customer/lookFor")
+    @PutMapping("/customers")
     public Customer putCustomer(@RequestBody Customer c){
         Iterator<Customer> it = customers.iterator();
         while(it.hasNext()){
@@ -69,6 +70,24 @@ public class CustomerRestController {
                 customers.remove(c1);
             }
         }
+        return null;
+    }
+
+    @PatchMapping("/customers")
+    public Customer patchCustomer(@RequestBody Customer customer){
+        for(Customer c : customers){
+            if(c.getId() == customer.getId()){
+                if(customer.getName() != null){
+                    c.setName(customer.getName());
+                }else if(customer.getUser_name() != null){
+                    c.setUser_name(customer.getUser_name());
+                }else if(customer.getPass() != null){
+                    c.setPass(customer.getPass());
+                }
+                return customer;
+            }
+        }
+
         return null;
     }
 
