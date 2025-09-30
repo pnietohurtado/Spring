@@ -42,10 +42,11 @@ public class CustomerRestController {
 
 
     @PostMapping("/customers")
-    public ResponseEntity<Customer> postCustomer(@RequestBody Customer c){
+    public ResponseEntity<?> postCustomer(@RequestBody Customer c){
         System.out.println("New customer added, Welcome " + c.getName() + "! ");
         customers.add(c);
-        return ResponseEntity.ok(c);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Customer created succesfully by the username of " + c.getUser_name());
     }
 
 
@@ -58,10 +59,20 @@ public class CustomerRestController {
                 c1.setName(c.getName());
                 c1.setUser_name(c.getUser_name());
                 c1.setPass(c.getPass());
-                return ResponseEntity.ok(c1);
+
+                return ResponseEntity.noContent().build();
+
+                /*
+                return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                        .body("Customer succesfully found by the username of " + c.getUser_name());
+                 */
             }
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Customer not found by the username " + c.getUser_name());
+        /*
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("Customer not found by the username " + c.getUser_name());
+         */
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/customers/delete/{id}")
@@ -71,6 +82,8 @@ public class CustomerRestController {
             Customer c1 = (Customer) it.next();
             if(c1.getId() == id){
                 customers.remove(c1);
+                return ResponseEntity.status(HttpStatus.ACCEPTED)
+                        .body("Customer successfully deleted from the database");
             }
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Couldn't delete the customer " + id);
@@ -92,7 +105,8 @@ public class CustomerRestController {
             }
         }
 
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Customer not found by the username " + customer.getUser_name());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("Customer not found by the username " + customer.getUser_name());
     }
 
 }
