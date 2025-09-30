@@ -2,6 +2,9 @@ package com.proyecto01.proyecto01.controllers;
 
 import com.proyecto01.proyecto01.models.Customer;
 import jakarta.websocket.server.PathParam;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,33 +24,33 @@ public class CustomerRestController {
             ));
 
     @GetMapping
-    public List<Customer> getCustomers(){
-        return customers;
+    public ResponseEntity<List<Customer>> getCustomers(){
+        return ResponseEntity.ok(customers);
     }
 
     @GetMapping("/{name}")
-    public Customer getCustomer(@PathVariable String name){
+    public ResponseEntity<?> getCustomer(@PathVariable String name){
         Iterator it = customers.iterator();
         while(it.hasNext()){
             Customer c = (Customer) it.next();
             if(c.getName().equals(name)){
-                return c;
+                return ResponseEntity.ok(c);
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found by the username " + name);
     }
 
 
     @PostMapping("/customers")
-    public Customer postCustomer(@RequestBody Customer c){
+    public ResponseEntity<Customer> postCustomer(@RequestBody Customer c){
         System.out.println("New customer added, Welcome " + c.getName() + "! ");
         customers.add(c);
-        return c;
+        return ResponseEntity.ok(c);
     }
 
 
     @PutMapping("/customers")
-    public Customer putCustomer(@RequestBody Customer c){
+    public ResponseEntity<?> putCustomer(@RequestBody Customer c){
         Iterator<Customer> it = customers.iterator();
         while(it.hasNext()){
             Customer c1 = (Customer) it.next();
@@ -55,14 +58,14 @@ public class CustomerRestController {
                 c1.setName(c.getName());
                 c1.setUser_name(c.getUser_name());
                 c1.setPass(c.getPass());
-                return c1;
+                return ResponseEntity.ok(c1);
             }
         }
-        return c;
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Customer not found by the username " + c.getUser_name());
     }
 
     @DeleteMapping("/customers/delete/{id}")
-    public Customer deleteCustomer(@PathVariable int id){
+    public ResponseEntity<?> deleteCustomer(@PathVariable int id){
         Iterator<Customer> it = customers.iterator();
         while(it.hasNext()){
             Customer c1 = (Customer) it.next();
@@ -70,11 +73,12 @@ public class CustomerRestController {
                 customers.remove(c1);
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Couldn't delete the customer " + id);
     }
 
-    @PatchMapping("/customers")
-    public Customer patchCustomer(@RequestBody Customer customer){
+    //@PatchMapping("/customers")
+    @RequestMapping
+    public ResponseEntity<?> patchCustomer(@RequestBody Customer customer){
         for(Customer c : customers){
             if(c.getId() == customer.getId()){
                 if(customer.getName() != null){
@@ -84,11 +88,11 @@ public class CustomerRestController {
                 }else if(customer.getPass() != null){
                     c.setPass(customer.getPass());
                 }
-                return customer;
+                return ResponseEntity.ok(c);
             }
         }
 
-        return null;
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Customer not found by the username " + customer.getUser_name());
     }
 
 }
