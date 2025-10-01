@@ -54,7 +54,7 @@ public class CustomerRestController {
                 .buildAndExpand(c.getUser_name())
                 .toUri();
 
-        return ResponseEntity.created(location).build(); 
+        return ResponseEntity.created(location).build();
 
         /*
         return ResponseEntity.status(HttpStatus.CREATED)
