@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -40,13 +42,24 @@ public class CustomerRestController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found by the username " + name);
     }
 
-
+    //@RequestMapping(method = RequestMethod.POST)
     @PostMapping("/customers")
     public ResponseEntity<?> postCustomer(@RequestBody Customer c){
         System.out.println("New customer added, Welcome " + c.getName() + "! ");
         customers.add(c);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{username}")
+                .buildAndExpand(c.getUser_name())
+                .toUri();
+
+        return ResponseEntity.created(location).build(); 
+
+        /*
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("Customer created succesfully by the username of " + c.getUser_name());
+         */
     }
 
 
