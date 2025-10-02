@@ -16,7 +16,7 @@ import java.util.List;
 public class ProductRestController {
 
     @Autowired
-    @Qualifier("JAVA") // Elije la interfaz que vamos a utilizar 
+    //@Qualifier("JAVA") // Elije la interfaz que vamos a utilizar
     private ProductService repo;
 
 

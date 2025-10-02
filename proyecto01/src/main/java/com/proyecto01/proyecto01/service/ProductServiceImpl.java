@@ -1,13 +1,16 @@
 package com.proyecto01.proyecto01.service;
 
 import com.proyecto01.proyecto01.models.Product;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Service("JAVA")
+@Service//("JAVA")
+@ConditionalOnProperty(name = "service.products", havingValue = "json")
 public class ProductServiceImpl implements ProductService
 /*
 * Aquí es donde debe de ir toda la lógica de nuestro programa
