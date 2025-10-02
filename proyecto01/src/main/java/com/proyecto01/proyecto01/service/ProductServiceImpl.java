@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class ProductServiceImpl
+public class ProductServiceImpl implements ProductService
 /*
 * Aquí es donde debe de ir toda la lógica de nuestro programa
 * , es decir, dentro de los controladores no puede haber métodos
@@ -24,7 +24,7 @@ public class ProductServiceImpl
             new Product(4, "Arroz" , 0.66, 40)
     ));
 
-
+    @Override
     public List<Product> getProducts(){
         return products;
     }

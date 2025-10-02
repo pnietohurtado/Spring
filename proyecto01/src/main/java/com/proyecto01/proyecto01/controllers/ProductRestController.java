@@ -1,7 +1,8 @@
 package com.proyecto01.proyecto01.controllers;
 
 import com.proyecto01.proyecto01.models.Product;
-import com.proyecto01.proyecto01.service.ProductServiceImpl;
+import com.proyecto01.proyecto01.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +14,8 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductRestController {
 
-    private ProductServiceImpl repo = new ProductServiceImpl();
+    @Autowired
+    private ProductService repo;
 
     @GetMapping
     private ResponseEntity<?> getProducts() {
