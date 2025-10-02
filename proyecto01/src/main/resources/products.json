@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Potatoes",
+    "price": 6.53,
+    "stock": 100
+  },
+  {
+    "id": 2,
+    "name": "Lays",
+    "price": 2.33,
+    "stock": 50
+  },
+  {
+    "id": 3,
+    "name": "Carrots",
+    "price": 1.22,
+    "stock": 30
+  },
+  {
+    "id": 4,
+    "name": "Rice",
+    "price": 0.66,
+    "stock": 40
+  }
+]
