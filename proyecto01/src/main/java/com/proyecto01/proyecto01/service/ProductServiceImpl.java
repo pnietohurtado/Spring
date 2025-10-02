@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Service
+@Service("JAVA")
 public class ProductServiceImpl implements ProductService
 /*
 * Aquí es donde debe de ir toda la lógica de nuestro programa
