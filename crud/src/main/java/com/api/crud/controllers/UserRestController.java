@@ -30,4 +30,13 @@ public class UserRestController {
         return userService.getById(id);
     }
 
+    @PutMapping("/{id}")
+    public UsersModel addUserModel(@RequestBody UsersModel model, @PathVariable Long id){
+        return this.userService.updateUser(model, id);
+    }
+
+    @DeleteMapping("/{id}")
+    public boolean deleteUserModel(@PathVariable Long id){
+        return this.userService.deleteUser(id); 
+    }
 }

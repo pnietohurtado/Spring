@@ -26,8 +26,23 @@ public class UserServiceImpl {
         return repo.findById(id);
     }
 
-    public Optional<UsersModel> updateUser(UsersModel model, Long id){
-        Optional<UsersModel> user =repo.findById(id);
-        return user;  
+    public UsersModel updateUser(UsersModel model, Long id){
+        UsersModel user =repo.findById(id).get();
+
+        user.setFirstName(model.getFirstName());
+        user.setLastName(model.getLastName());
+        user.setEmail(model.getEmail());
+
+        return user;
+    }
+
+    public Boolean deleteUser(Long id){
+        try{
+            repo.deleteById(id);
+            return true;
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 }
