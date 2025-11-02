@@ -1,11 +1,13 @@
 package com.bbdd.pruebamysql.Entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jdk.jfr.DataAmount;
 
 @Entity
 public class User {
 
+    @Id
     private int id;
     private String nombre;
     private String apellido;
