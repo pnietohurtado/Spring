@@ -1,0 +1,17 @@
+<hibernate-mapping>
+    <class name="com.trabajoTocho.TrabajoTocho.modelo.User" table="User">
+        <meta attribute="class-description">
+            Clase encargada de llevar un registro de todos los usuarios de la red social
+        </meta>
+
+        <id name="id" type="int" column="id_user">
+            <generator class="native"/>
+        </id>
+
+        <property name="username" type="string" column="username"/>
+        <property name="password" type="string" column="password"/>
+        <property name="lastConnection" type="string" column="lastConnection"/>
+        <property name="timeLastConnection" type="int" column="timeLastConnection"/>
+
+    </class>
+</hibernate-mapping>

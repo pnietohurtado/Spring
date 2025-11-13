@@ -1,0 +1,17 @@
+<hibernate-mapping>
+    <class name="com.trabajoTocho.TrabajoTocho.modelo.Post" table="User">
+        <meta attribute="class-description">
+            Clase encargada de llevar un registro de todos los usuarios de la red social
+        </meta>
+
+        <id name="id" type="int" column="id_post">
+            <generator class="native"/>
+        </id>
+
+        <many-to-one name="id_profile" class="com.trabajoTocho.TrabajoTocho.modelo.Profile" column="id_profile" not-null="true" />
+        <property name="like" type="int" column="like"/>
+        <property name="comment" type="int" column="comment"/>
+        <property name="description" type="string" column="description"/>
+
+    </class>
+</hibernate-mapping>
