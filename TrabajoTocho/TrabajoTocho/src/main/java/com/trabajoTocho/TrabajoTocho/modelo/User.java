@@ -23,8 +23,8 @@ public class User {
     private int timeLastConnection;
 
     public User(){}
-    public User(int idu, String u, String p, String con, int last ){
-        this.id_user = idu;
+    public User( String u, String p, String con, int last ){
+
         this.username = u;
         this.password = p;
         this.lastConnection = con;
