@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_user;
 
     @Column
@@ -23,8 +23,8 @@ public class User {
     private int timeLastConnection;
 
     public User(){}
-    public User( String u, String p, String con, int last ){
-
+    public User( int id, String u, String p, String con, int last ){
+        this.id_user = id;
         this.username = u;
         this.password = p;
         this.lastConnection = con;
