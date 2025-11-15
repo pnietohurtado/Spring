@@ -1,19 +1,35 @@
 package com.trabajoTocho.TrabajoTocho.modelo;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 @Entity
+@Table(name="Profile")
 public class Profile {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_profile;
-    private int id_user;
+
+    @OneToOne
+    @JoinColumn(name = "id_user")
+    private User id_user;
+
+    @Column
     private int numberFollowers;
+
+    @Column
     private String description;
 
+    @OneToMany(mappedBy = "profile")
+    private ArrayList<Post> posts;
+
     public Profile(){}
-    public Profile(int idp, int idu, int num, String des){
+    public Profile(int idp, User user, int num, String des){
         this.id_profile = idp;
-        this.id_user = idu;
+        this.id_user = user;
         this.numberFollowers = num;
         this.description = des;
     }
@@ -26,11 +42,11 @@ public class Profile {
         this.id_profile = id_profile;
     }
 
-    public int getId_user() {
+    public User getId_user() {
         return id_user;
     }
 
-    public void setId_user(int id_user) {
+    public void setId_user(User id_user) {
         this.id_user = id_user;
     }
 
@@ -48,6 +64,18 @@ public class Profile {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Profile profile = (Profile) o;
+        return id_profile == profile.id_profile && numberFollowers == profile.numberFollowers && Objects.equals(id_user, profile.id_user) && Objects.equals(description, profile.description) && Objects.equals(posts, profile.posts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id_profile, id_user, numberFollowers, description, posts);
     }
 
     @Override

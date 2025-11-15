@@ -1,13 +1,25 @@
 package com.trabajoTocho.TrabajoTocho.modelo;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "users")
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_user;
+
+    @Column
     private String username;
+
+    @Column
     private String password;
+
+    @Column
     private String lastConnection;
+
+    @Column
     private int timeLastConnection;
 
     public User(){}
