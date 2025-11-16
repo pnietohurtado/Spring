@@ -1,10 +1,13 @@
 package com.trabajoTocho.TrabajoTocho.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.UUID;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "users")
 public class User {
 
@@ -25,6 +28,7 @@ public class User {
     private int timeLastConnection;
 
     @OneToOne(mappedBy = "user")
+    @JsonManagedReference
     private Profile profile;
 
     public User(){}

@@ -15,4 +15,8 @@ public class UserService {
         return repo.save(user);
     }
 
+    public User getUserById(Long id){
+        return repo.getReferenceById(id);
+    }
+
 }

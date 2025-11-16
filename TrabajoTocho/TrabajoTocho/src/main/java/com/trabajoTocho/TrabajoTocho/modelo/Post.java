@@ -1,11 +1,14 @@
 package com.trabajoTocho.TrabajoTocho.modelo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name="post")
 public class Post {
 
@@ -24,6 +27,7 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "profile_uuid")
+    @JsonBackReference
     private Profile profile;
 
 

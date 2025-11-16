@@ -1,11 +1,15 @@
 package com.trabajoTocho.TrabajoTocho.modelo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name="profile")
 public class Profile {
 
@@ -15,6 +19,7 @@ public class Profile {
 
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)
+    @JsonBackReference
     private User user;
 
     @Column
@@ -24,6 +29,7 @@ public class Profile {
     private String description;
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private ArrayList<Post> posts = new ArrayList<>();
 
     public Profile() {}

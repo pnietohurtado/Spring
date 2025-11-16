@@ -1,5 +1,6 @@
 package com.trabajoTocho.TrabajoTocho.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
