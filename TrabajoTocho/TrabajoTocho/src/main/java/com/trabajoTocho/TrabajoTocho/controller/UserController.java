@@ -1,5 +1,6 @@
 package com.trabajoTocho.TrabajoTocho.controller;
 
+import com.trabajoTocho.TrabajoTocho.modelo.Response;
 import com.trabajoTocho.TrabajoTocho.modelo.User;
 import com.trabajoTocho.TrabajoTocho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,17 @@ public class UserController {
         User u = service.getUserById(id);
         System.out.println(id);
         return ResponseEntity.ok(u);
+    }
+
+    @PutMapping("/updateUser/{id}")
+    public ResponseEntity<User> update(@RequestBody User u, @PathVariable Long id ){
+        User us = service.updateUser(u, id);
+        return ResponseEntity.ok(us);
+    }
+
+    @DeleteMapping("/deleteUser/{id}")
+    public void deleteUser(@PathVariable Long id){
+        service.deleteUser(id);
     }
 
 

@@ -19,4 +19,18 @@ public class UserService {
         return repo.getReferenceById(id);
     }
 
+    public User updateUser(User u, Long id){
+        User user = repo.getReferenceById(id);
+        user.setUsername(u.getUsername());
+        user.setPassword(u.getPassword());
+        user.setLastConnection(u.getLastConnection());
+        user.setTimeLastConnection(u.getTimeLastConnection());
+
+        return repo.save(user);
+    }
+
+    public void deleteUser(Long id){
+        repo.deleteById(id);
+    }
+
 }
