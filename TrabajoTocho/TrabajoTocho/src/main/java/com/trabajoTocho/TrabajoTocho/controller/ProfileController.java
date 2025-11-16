@@ -24,15 +24,8 @@ public class ProfileController {
 
     @PostMapping
     public ResponseEntity<Profile> addProfile(@RequestBody Profile pro){
-        User u = serviceUser.getUserById(pro.getUser().getUuid());
-        System.err.println(u);
 
-        Profile prof = new Profile();
-        prof.setUser(u);
-        prof.setDescription(pro.getDescription());
-        prof.setNumberFollowers(pro.getNumberFollowers());
-
-        service.addProfile(prof);
+        Profile prof = service.addProfile(pro);
         return ResponseEntity.ok(prof);
     }
 
