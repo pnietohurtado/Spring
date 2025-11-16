@@ -8,12 +8,27 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     @Autowired
     private UserService service;
+
+    @GetMapping("getAllUsers")
+    public ArrayList<User> getAllUsers(){
+        ArrayList<User> users = service.listUsers();
+
+        System.out.println("======Usuarios=======");
+        for(User u : users){
+            System.out.println(u.toString());
+        }
+        System.out.println("=====================");
+
+        return users;
+    }
 
     //Para poder crear un nuevo usuario
     @PostMapping//("/addUser")
