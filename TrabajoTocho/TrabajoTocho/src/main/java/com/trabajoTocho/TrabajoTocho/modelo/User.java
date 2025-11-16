@@ -2,13 +2,15 @@ package com.trabajoTocho.TrabajoTocho.modelo;
 
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_user;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long uuid;
 
     @Column
     private String username;
@@ -22,21 +24,23 @@ public class User {
     @Column
     private int timeLastConnection;
 
+    @OneToOne(mappedBy = "user")
+    private Profile profile;
+
     public User(){}
-    public User( int id, String u, String p, String con, int last ){
-        this.id_user = id;
+    public User(  String u, String p, String con, int last ){
         this.username = u;
         this.password = p;
         this.lastConnection = con;
         this.timeLastConnection = last;
     }
 
-    public int getId_user() {
-        return id_user;
+    public Long getUuid() {
+        return uuid;
     }
 
-    public void setId_user(int id_user) {
-        this.id_user = id_user;
+    public void setUuid(Long uuid) {
+        this.uuid = uuid;
     }
 
     public String getUsername() {
@@ -74,7 +78,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id_user=" + id_user +
+                "id_user=" + uuid +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", lastConnection='" + lastConnection + '\'' +

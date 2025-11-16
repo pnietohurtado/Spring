@@ -3,14 +3,15 @@ package com.trabajoTocho.TrabajoTocho.modelo;
 import jakarta.persistence.*;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
-@Table(name="Post")
+@Table(name="post")
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_post;
+    private Long uuid;
 
     @Column
     private int likes;
@@ -22,25 +23,24 @@ public class Post {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "profile_id_profile")
+    @JoinColumn(name = "profile_uuid")
     private Profile profile;
 
 
     public Post(){}
-    public Post(int idp, int lik, int com, String des, Profile pro){
-        this.id_post = idp;
+    public Post( int lik, int com, String des, Profile pro){
         this.likes = lik;
         this.comments = com;
         this.description = des;
         this.profile = pro;
     }
 
-    public int getId_profile() {
-        return id_post;
+    public Long getId_profile() {
+        return uuid;
     }
 
-    public void setId_profile(int id_profile) {
-        this.id_post = id_profile;
+    public void setId_profile(Long id_profile) {
+        this.uuid = id_profile;
     }
 
 
@@ -76,12 +76,12 @@ public class Post {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Post post = (Post) o;
-        return id_post == post.id_post && likes == post.likes && comments == post.comments && Objects.equals(description, post.description) && Objects.equals(profile, post.profile);
+        return uuid == post.uuid && likes == post.likes && comments == post.comments && Objects.equals(description, post.description) && Objects.equals(profile, post.profile);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id_post, likes, comments, description, profile);
+        return Objects.hash(uuid, likes, comments, description, profile);
     }
 
     @Override

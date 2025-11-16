@@ -1,21 +1,21 @@
 package com.trabajoTocho.TrabajoTocho.modelo;
 
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
-@Table(name="Profile")
+@Table(name="profile")
 public class Profile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_profile;
+    private Long uuid;
 
     @OneToOne
-    @JoinColumn(name = "id_user")
-    private User id_user;
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
 
     @Column
     private int numberFollowers;
@@ -23,31 +23,31 @@ public class Profile {
     @Column
     private String description;
 
-    @OneToMany(mappedBy = "profile")
-    private ArrayList<Post> posts;
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
+    private ArrayList<Post> posts = new ArrayList<>();
 
-    public Profile(){}
-    public Profile(int idp, User user, int num, String des){
-        this.id_profile = idp;
-        this.id_user = user;
+    public Profile() {}
+
+    public Profile(User user, int num, String des) {
+        this.user = user;
         this.numberFollowers = num;
         this.description = des;
     }
 
-    public int getId_profile() {
-        return id_profile;
+    public Long getUuid() {
+        return uuid;
     }
 
-    public void setId_profile(int id_profile) {
-        this.id_profile = id_profile;
+    public void setUuid(Long uuid) {
+        this.uuid = uuid;
     }
 
-    public User getId_user() {
-        return id_user;
+    public User getUser() {
+        return user;
     }
 
-    public void setId_user(User id_user) {
-        this.id_user = id_user;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public int getNumberFollowers() {
@@ -66,23 +66,19 @@ public class Profile {
         this.description = description;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Profile profile = (Profile) o;
-        return id_profile == profile.id_profile && numberFollowers == profile.numberFollowers && Objects.equals(id_user, profile.id_user) && Objects.equals(description, profile.description) && Objects.equals(posts, profile.posts);
+    public ArrayList<Post> getPosts() {
+        return posts;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id_profile, id_user, numberFollowers, description, posts);
+    public void setPosts(ArrayList<Post> posts) {
+        this.posts = posts;
     }
 
     @Override
     public String toString() {
         return "Profile{" +
-                "id_profile=" + id_profile +
-                ", id_user=" + id_user +
+                "uuid=" + uuid +
+                ", user=" + user +
                 ", numberFollowers=" + numberFollowers +
                 ", description='" + description + '\'' +
                 '}';
