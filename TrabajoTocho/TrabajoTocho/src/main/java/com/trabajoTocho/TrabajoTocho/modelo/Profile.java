@@ -1,6 +1,7 @@
 package com.trabajoTocho.TrabajoTocho.modelo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -20,7 +21,8 @@ public class Profile {
 
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)
-    @JsonBackReference
+    @JsonIgnoreProperties("profile")
+//    @JsonBackReference
     private User user;
 
     @Column
@@ -41,6 +43,7 @@ public class Profile {
             joinColumns = @JoinColumn(name="profile_uuid"),
             inverseJoinColumns = @JoinColumn(name = "post_uuid")
     )
+    @JsonIgnore
     private List<Post> posts;
 
     public Profile() {}

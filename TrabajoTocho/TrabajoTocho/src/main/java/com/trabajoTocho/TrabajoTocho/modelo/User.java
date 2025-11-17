@@ -1,5 +1,6 @@
 package com.trabajoTocho.TrabajoTocho.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -28,7 +29,8 @@ public class User {
     private int timeLastConnection;
 
     @OneToOne(mappedBy = "user")
-    @JsonManagedReference
+    @JsonIgnore
+    //@JsonManagedReference
     private Profile profile;
 
     public User(){}

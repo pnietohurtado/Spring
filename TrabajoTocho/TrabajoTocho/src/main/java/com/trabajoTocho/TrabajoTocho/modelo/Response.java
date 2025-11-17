@@ -18,9 +18,10 @@ public class Response
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uuid;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_uuid")
-    @JsonBackReference
+    @JsonIgnoreProperties("responses")
+    //@JsonBackReference
     private Post post;
 
     @Column

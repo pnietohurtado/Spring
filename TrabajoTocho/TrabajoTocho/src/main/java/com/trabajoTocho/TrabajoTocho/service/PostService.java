@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
+
 @Service
 public class PostService {
 
@@ -14,6 +16,10 @@ public class PostService {
 
     public Post addPost(Post p){
         return repo.save(p);
+    }
+
+    public ArrayList<Post> findAllPost(){
+        return (ArrayList<Post>) repo.findAll();
     }
 
 }

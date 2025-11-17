@@ -1,6 +1,7 @@
 package com.trabajoTocho.TrabajoTocho.modelo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -37,12 +38,14 @@ public class Post {
 
 
     @ManyToMany(mappedBy = "posts")
+    @JsonIgnore
     private List<Profile> profiles;
 
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private ArrayList<Response> responses = new ArrayList<>();
+    @JsonIgnore
+    //@JsonManagedReference
+    private List<Response> responses = new ArrayList<>();
 
     public Post(){}
     public Post( int lik, int com, String des){
@@ -91,11 +94,11 @@ public class Post {
         this.profiles = profiles;
     }
 
-    public ArrayList<Response> getResponses() {
+    public List<Response> getResponses() {
         return responses;
     }
 
-    public void setResponses(ArrayList<Response> responses) {
+    public void setResponses(List<Response> responses) {
         this.responses = responses;
     }
 
