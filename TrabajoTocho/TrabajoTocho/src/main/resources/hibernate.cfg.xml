@@ -23,6 +23,7 @@
         <mapping resource="User.hbm.xml"/>
         <mapping resource="Profile.hbm.xml"/>
         <mapping resource="Post.hbm.xml"/>
+        <mapping resource="Response.hbm.xml"/>
 
     </session-factory>
 </hibernate-configuration>

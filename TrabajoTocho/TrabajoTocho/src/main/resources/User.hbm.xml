@@ -13,5 +13,10 @@
         <property name="lastConnection" type="string" column="lastConnection"/>
         <property name="timeLastConnection" type="int" column="timeLastConnection"/>
 
+        <one-to-one name="profile"
+                    class="com.trabajoTocho.TrabajoTocho.modelo.Profile"
+                    cascade="all"
+                    property-ref="user"/>
+
     </class>
 </hibernate-mapping>

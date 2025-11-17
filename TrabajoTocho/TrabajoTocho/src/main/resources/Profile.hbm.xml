@@ -1,5 +1,5 @@
 <hibernate-mapping>
-    <class name="com.trabajoTocho.TrabajoTocho.modelo.User" table="User">
+    <class name="com.trabajoTocho.TrabajoTocho.modelo.Profile" table="Profile">
         <meta attribute="class-description">
             Clase encargada de llevar un registro de todos los usuarios de la red social
         </meta>
@@ -8,7 +8,11 @@
             <generator class="native"/>
         </id>
 
-        <many-to-one name="id_user" class="com.trabajoTocho.TrabajoTocho.modelo.User" column="id_user" not-null="true" />
+        <many-to-one name="user" class="com.trabajoTocho.TrabajoTocho.modelo.User" column="id_user" unique="true" not-null="true" cascade="none"/>
+        <bag name="posts" table="collaborator" cascade="save-update" inverse="false">
+            <key column="id_profile"/>
+            <many-to-many class="com.trabajoTocho.TrabajoTocho.modelo.Post" column="id_post"/>
+        </bag>
         <property name="numberFollowers" type="int" column="numberFollowers"/>
         <property name="description" type="string" column="description"/>
 

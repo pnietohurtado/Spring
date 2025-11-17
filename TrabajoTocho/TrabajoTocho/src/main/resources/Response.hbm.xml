@@ -1,0 +1,22 @@
+<hibernate-mapping>
+    <class name="com.trabajoTocho.TrabajoTocho.modelo.Response" table="Response">
+        <meta attribute="class-description">
+            Clase encargada de llevar un registro de todos los usuarios de la red social
+        </meta>
+
+        <id name="id" type="int" column="id_profile">
+            <generator class="native"/>
+        </id>
+
+        <many-to-one name="post"
+                     class="com.trabajoTocho.TrabajoTocho.modelo.Post"
+                     column="id_post"
+                     not-null="true"
+                     cascade="none"/>
+
+        <property name="description" column="description" type="string" length="500"/>
+        <property name="time" column="time" type="string" length="50"/>
+
+
+    </class>
+</hibernate-mapping>
