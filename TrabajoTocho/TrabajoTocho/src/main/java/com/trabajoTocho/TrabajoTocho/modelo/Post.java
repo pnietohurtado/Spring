@@ -2,8 +2,11 @@ package com.trabajoTocho.TrabajoTocho.modelo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -25,43 +28,51 @@ public class Post {
     @Column
     private String description;
 
+    /*
     @ManyToOne
     @JoinColumn(name = "profile_uuid")
     @JsonBackReference
     private Profile profile;
+    */
 
+
+    @ManyToMany(mappedBy = "posts")
+    private List<Profile> profiles;
+
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private ArrayList<Response> responses = new ArrayList<>();
 
     public Post(){}
-    public Post( int lik, int com, String des, Profile pro){
+    public Post( int lik, int com, String des){
         this.likes = lik;
         this.comments = com;
         this.description = des;
-        this.profile = pro;
     }
 
-    public Long getId_profile() {
+    public Long getUuid() {
         return uuid;
     }
 
-    public void setId_profile(Long id_profile) {
-        this.uuid = id_profile;
+    public void setUuid(Long uuid) {
+        this.uuid = uuid;
     }
 
-
-    public int getLike() {
+    public int getLikes() {
         return likes;
     }
 
-    public void setLike(int like) {
-        this.likes = like;
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
-    public int getComment() {
+    public int getComments() {
         return comments;
     }
 
-    public void setComment(int comment) {
-        this.comments = comment;
+    public void setComments(int comments) {
+        this.comments = comments;
     }
 
     public String getDescription() {
@@ -72,26 +83,38 @@ public class Post {
         this.description = description;
     }
 
-    public Profile getProfile(){return this.profile; }
-    public void setProfile(Profile pro){this.profile = pro; }
+    public List<Profile> getProfiles() {
+        return profiles;
+    }
 
+    public void setProfiles(List<Profile> profiles) {
+        this.profiles = profiles;
+    }
+
+    public ArrayList<Response> getResponses() {
+        return responses;
+    }
+
+    public void setResponses(ArrayList<Response> responses) {
+        this.responses = responses;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Post post = (Post) o;
-        return uuid == post.uuid && likes == post.likes && comments == post.comments && Objects.equals(description, post.description) && Objects.equals(profile, post.profile);
+        return likes == post.likes && comments == post.comments && Objects.equals(uuid, post.uuid) && Objects.equals(description, post.description) && Objects.equals(profiles, post.profiles) && Objects.equals(responses, post.responses);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, likes, comments, description, profile);
+        return Objects.hash(uuid, likes, comments, description, profiles, responses);
     }
 
     @Override
     public String toString() {
         return "Profile{" +
-                "id_profile=" + profile +
+                "id_profile=" + profiles +
                 ", like=" + likes +
                 ", comment=" + comments +
                 ", description='" + description + '\'' +

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -28,9 +29,19 @@ public class Profile {
     @Column
     private String description;
 
+    /*
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
     @JsonManagedReference
     private ArrayList<Post> posts = new ArrayList<>();
+    */
+
+    @ManyToMany
+    @JoinTable(
+            name = "collaborator",
+            joinColumns = @JoinColumn(name="profile_uuid"),
+            inverseJoinColumns = @JoinColumn(name = "post_uuid")
+    )
+    private List<Post> posts;
 
     public Profile() {}
 
@@ -72,12 +83,31 @@ public class Profile {
         this.description = description;
     }
 
-    public ArrayList<Post> getPosts() {
-        return posts;
-    }
+
 
     public void setPosts(ArrayList<Post> posts) {
         this.posts = posts;
+    }
+
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Profile profile = (Profile) o;
+        return numberFollowers == profile.numberFollowers && Objects.equals(uuid, profile.uuid) && Objects.equals(user, profile.user) && Objects.equals(description, profile.description) && Objects.equals(posts, profile.posts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, user, numberFollowers, description, posts);
     }
 
     @Override
