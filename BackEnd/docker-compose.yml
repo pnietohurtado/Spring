@@ -1,0 +1,13 @@
+# docker-compose.yml (MÁS SIMPLE)
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "0.0.0.0:8080:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://172.17.0.1:3306/notas?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123
+    restart: unless-stopped
