@@ -1,180 +1,45 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Chat WebSocket</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
-    <style>
-        #messageArea {
-            height: 300px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 15px;
-            overflow-y: auto;
-            background-color: #f8f9fa;
-        }
-        .message {
-            margin-bottom: 8px;
-            padding: 5px;
-            border-radius: 5px;
-        }
-        .badge {
-            float: right;
-        }
-    </style>
+    <title>Hello WebSocket</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BYYiISIF">
+    <link href="/main.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script src="/app.js"></script>
 </head>
 <body>
-<div class="container mt-5">
-    <div class="card">
-        <div class="card-header">
-            <h3>Chat en Tiempo Real</h3>
-            <span id="connectionStatus" class="badge bg-secondary">Desconectado</span>
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+<div id="main-content" class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">WebSocket connection:</label>
+                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
+                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect</button>
+                </div>
+            </form>
         </div>
-        <div class="card-body">
-            <!-- Área de mensajes -->
-            <div id="messageArea"></div>
-
-            <!-- Controles -->
-            <div class="mb-3">
-                <label for="username" class="form-label">Nombre usuario:</label>
-                <input type="text" class="form-control" id="username" placeholder="Introduce tu nombre">
-            </div>
-
-            <div class="mb-3">
-                <label for="messageInput" class="form-label">Mensaje:</label>
-                <input type="text" class="form-control" id="messageInput"
-                       placeholder="Escribe tu mensaje..." disabled>
-            </div>
-
-            <button onclick="sendMessage()" class="btn btn-primary" id="sendButton" disabled>
-                Enviar Mensaje
-            </button>
-
-            <button onclick="connectWebSocket()" class="btn btn-outline-secondary">
-                Reconectar
-            </button>
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="message">Message:</label>
+                    <input type="text" id="message" class="form-control" placeholder="Your message here...">
+                </div>
+                <button id="send" class="btn btn-default" type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="conversation" class="table table-striped">
+                <tbody id="greetings">
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-
-<script th:inline="javascript">
-    let socket = null;
-    let currentUsername = '';
-
-    // Función para conectar al WebSocket
-    function connectWebSocket() {
-        // Usar el mismo puerto que tu aplicación Spring Boot (normalmente 8080)
-        const websocketUrl = "ws://localhost:8085/chat";
-
-        try {
-            socket = new WebSocket(websocketUrl);
-
-            socket.onopen = function(event) {
-                console.log("Conexión WebSocket establecida");
-                updateConnectionStatus(true);
-                addSystemMessage("Conectado al chat");
-            };
-
-            socket.onmessage = function(event) {
-                console.log("Mensaje recibido:", event.data);
-                displayMessage(event.data);
-            };
-
-            socket.onclose = function(event) {
-                console.log("Conexión WebSocket cerrada");
-                updateConnectionStatus(false);
-                addSystemMessage("Desconectado del chat");
-            };
-
-            socket.onerror = function(error) {
-                console.error("Error WebSocket:", error);
-                updateConnectionStatus(false);
-                addSystemMessage("Error de conexión con el servidor");
-            };
-
-        } catch (error) {
-            console.error("Error al crear WebSocket:", error);
-            alert("No se pudo conectar al servidor de chat");
-        }
-    }
-
-    function updateConnectionStatus(connected) {
-        const statusElement = document.getElementById('connectionStatus');
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
-
-        if (statusElement) {
-            statusElement.textContent = connected ? 'Conectado' : 'Desconectado';
-            statusElement.className = connected ? 'badge bg-success' : 'badge bg-danger';
-        }
-
-        if (messageInput) {
-            messageInput.disabled = !connected;
-        }
-
-        if (sendButton) {
-            sendButton.disabled = !connected;
-        }
-    }
-
-    function displayMessage(message) {
-        const messageArea = document.getElementById('messageArea');
-        if (!messageArea) {
-            console.error("Elemento messageArea no encontrado");
-            return;
-        }
-
-        const messageElement = document.createElement('div');
-        messageElement.className = 'message';
-        messageElement.textContent = message;
-        messageArea.appendChild(messageElement);
-
-        // Scroll al final
-        messageArea.scrollTop = messageArea.scrollHeight;
-    }
-
-    function addSystemMessage(message) {
-        displayMessage("Sistema: " + message);
-    }
-
-    function sendMessage() {
-        const usernameInput = document.getElementById('username');
-        const messageInput = document.getElementById('messageInput');
-
-        if (!usernameInput || !messageInput) {
-            console.error("Elementos de entrada no encontrados");
-            return;
-        }
-
-        const username = usernameInput.value.trim();
-        const message = messageInput.value.trim();
-
-        if (!username) {
-            alert("Por favor, introduce tu nombre de usuario");
-            return;
-        }
-
-        if (!message) {
-            alert("Por favor, escribe un mensaje");
-            return;
-        }
-
-        if (!socket || socket.readyState !== WebSocket.OPEN) {
-            alert("No estás conectado al chat");
-            return;
-        }
-
-        const fullMessage = username + ": " + message;
-        socket.send(fullMessage);
-        messageInput.value = '';
-    }
-
-    // Conectar cuando la página cargue
-    window.addEventListener('load', function() {
-        console.log("Página cargada, iniciando WebSocket...");
-        connectWebSocket();
-    });
-
-</script>
 </body>
 </html>
