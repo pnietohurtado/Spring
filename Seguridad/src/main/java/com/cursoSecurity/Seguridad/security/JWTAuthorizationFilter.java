@@ -20,6 +20,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     @Autowired
     private IJWTUtilityService service;
 
+    public JWTAuthorizationFilter(IJWTUtilityService ijwtUtilityService){
+        this.service = ijwtUtilityService; 
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
