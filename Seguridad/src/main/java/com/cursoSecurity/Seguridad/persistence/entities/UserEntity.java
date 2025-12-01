@@ -11,9 +11,16 @@ public class UserEntity {
     //@Column(name = "user_id") Prefiero que se me cree con el nombre de la variable
     private Long uuid;
 
+    @Column(name="firstName")
     private String firstName;
+
+    @Column(name="lastName")
     private String lastName;
+
+    @Column(name="email")
     private String email;
+
+    @Column(name = "password")
     private String password;
 
     public UserEntity(){}
