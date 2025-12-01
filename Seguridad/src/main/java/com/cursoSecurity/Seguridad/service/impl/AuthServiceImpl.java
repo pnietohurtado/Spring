@@ -67,11 +67,11 @@ public class AuthServiceImpl implements IAuthService {
 
             List<UserEntity> getAllUsers = repo.findAll();
             for(UserEntity u : getAllUsers){
-                /*if(u != null){
+                if(u.getEmail().equals(user.getEmail())){
                     response.setNumErrors(1);
                     response.setMessage("User already Exists!");
                     return response;
-                }*/
+                }
             }
 
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
