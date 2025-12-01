@@ -77,8 +77,14 @@ public class AuthServiceImpl implements IAuthService {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
             user.setPassword(encoder.encode(user.getPassword()));
 
-            System.out.println("Se debe de guardar el usuario de email " + user.getEmail());
+
+            //repo.insertUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
             repo.save(user);
+
+            if(response.getNumErrors() > 0 ){
+                System.out.println("Errores de validación: " + response.getMessage());
+                return response;
+            }
 
             response.setMessage("OK!");
             return response;

@@ -13,6 +13,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query(value = "SELECT * FROM users WHERE email = :email", nativeQuery = true) // Consulta de forma nativa
     Optional<UserEntity> findByEmail(String email);
 
-
+    @Query(value = "INSERT INTO users(firstName, lastName, email, password) VALUES (:name, :last, :email, :pass)", nativeQuery = true) // Consulta de forma nativa
+    Optional<UserEntity> insertUser(String name, String last, String email, String pass);
 
 }
