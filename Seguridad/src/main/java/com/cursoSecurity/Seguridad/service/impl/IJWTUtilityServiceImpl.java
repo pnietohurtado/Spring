@@ -21,6 +21,7 @@ import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.text.ParseException;
 import java.util.Base64;
 import java.util.Date;
@@ -100,7 +101,7 @@ public class IJWTUtilityServiceImpl implements IJWTUtilityService
             byte[] decodedKey = Base64.getDecoder().decode(privateKeyPEM);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 
-            return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(decodedKey));
+            return keyFactory.generatePrivate(new X509EncodedKeySpec(decodedKey));
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (NoSuchAlgorithmException e) {
