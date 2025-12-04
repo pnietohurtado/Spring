@@ -31,7 +31,7 @@ public class LoginDTO
         StringBuilder sb = new StringBuilder();
         sb.append("\nUsername: ").append(this.username).append(" Password: ").append(this.password)
                 .append(" Email: ").append(this.email).append("\n");
-        return sb.toString(); 
+        return sb.toString();
     }
 
 
