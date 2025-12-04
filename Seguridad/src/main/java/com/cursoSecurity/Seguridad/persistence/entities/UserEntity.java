@@ -1,10 +1,16 @@
 package com.cursoSecurity.Seguridad.persistence.entities;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
-public class UserEntity {
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +25,9 @@ public class UserEntity {
 
     @Column(name="email")
     private String email;
+
+    @Column(name="role")
+    private Role role;
 
     @Column(name = "password")
     private String password;
@@ -60,11 +69,24 @@ public class UserEntity {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.firstName;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void setRole(Role r){this.role = r; }
+    public Role getRole(){return this.role;}
 }
