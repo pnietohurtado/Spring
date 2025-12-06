@@ -1,0 +1,48 @@
+package com.InicioUsuario.repaso.Controller;
+
+import com.InicioUsuario.repaso.Persistance.Entity.UserEntity;
+import com.InicioUsuario.repaso.Service.DTO.LoginDTO;
+import com.InicioUsuario.repaso.Service.DTO.ResponseDTO;
+import com.InicioUsuario.repaso.Service.Impl.AuthServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.HashMap;
+
+@Controller
+@RequestMapping("/auth")
+public class AuthController {
+
+    @Autowired
+    private AuthServiceImpl service;
+
+    @PostMapping("/register")
+    private ResponseEntity<ResponseDTO> register(@RequestBody UserEntity user){
+        try {
+            return new ResponseEntity(service.register(user), HttpStatus.CREATED);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping("/login")
+    private ResponseEntity<ResponseDTO> login(@RequestBody LoginDTO login){
+        try {
+            HashMap<String, String> log = service.login(login);
+            if(log.containsKey("jwt")){
+                return new ResponseEntity(log, HttpStatus.OK);
+            }
+            System.out.println(log.get("error"));
+            return new ResponseEntity(log, HttpStatus.UNAUTHORIZED);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+}

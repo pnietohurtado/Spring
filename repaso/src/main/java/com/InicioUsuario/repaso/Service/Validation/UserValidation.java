@@ -19,9 +19,9 @@ public class UserValidation
 
         response.setError(0);
 
-        if(user.getUsername().length() < 3 ||
-                user.getUsername().length() > 20 ||
-                user.getUsername() == null){
+        if(user.getUsername() == null ||
+                user.getUsername().length() < 3 ||
+                user.getUsername().length() > 20){
 
             response.setError(response.getError() + 1);
             response.setMessage("An error has occurred at the username! Not valid parameters were introduced!");
