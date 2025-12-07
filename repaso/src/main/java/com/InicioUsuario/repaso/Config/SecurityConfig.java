@@ -31,7 +31,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authRequest -> // Dentrode este método es donde se deberían de añadir los roles a la hora de entrar en el servidor
                         authRequest
-                                .requestMatchers("/auth/**").permitAll() // Estas rutas serán públicas gracias al permitAll()
+                                .requestMatchers("/auth/**", "/user/findAll").permitAll() // Estas rutas serán públicas gracias al permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager ->
@@ -47,7 +47,6 @@ public class SecurityConfig {
 
                         })).build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder(){ // Totalmente necesario siemrpe
