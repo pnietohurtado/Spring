@@ -33,7 +33,14 @@ public class AuthController {
     @PostMapping("/login")
     private ResponseEntity<ResponseDTO> login(@RequestBody LoginDTO login){
         try {
-            HashMap<String, String> log = service.login(login);
+            HashMap<String, String> log = null;
+
+            if(login.getEmail() != null){
+                log = service.login(login, "email");
+            }else if(login.getUsername() != null){
+                log = service.login(login , "username");
+            }
+
             if(log.containsKey("jwt")){
                 return new ResponseEntity(log, HttpStatus.OK);
             }

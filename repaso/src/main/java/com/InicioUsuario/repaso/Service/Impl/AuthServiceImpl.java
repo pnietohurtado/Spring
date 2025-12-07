@@ -28,14 +28,23 @@ public class AuthServiceImpl implements IAuthService {
     private UserValidation validation;
 
     @Override
-    public HashMap<String, String> login(LoginDTO login) throws Exception {
+    public HashMap<String, String> login(LoginDTO login, String identifier) throws Exception {
 
         // Instancioamos el Hashmap que más tarde vamos a retornar
         HashMap<String, String> jwt = new HashMap<>();
-        Optional<UserEntity> user = repo.findUserByEmail(login.getUsername()); // Puede no devolvernos nada
+        Optional<UserEntity> user = null;
 
-        if(user.isEmpty()){
+        if(identifier.equals("username")) {
+            user = repo.findUserByUser(login.getUsername()); // Puede no devolvernos nada
+        } if(identifier.equals("email")){
+            user = repo.findUserByEmail(login.getEmail());
+        }
+
+        if(user.isEmpty() && identifier.equals("username")){
             jwt.put("error", "There's no user with that specific username on the database!");
+            return jwt;
+        } if(user.isEmpty() && identifier.equals("email")){
+            jwt.put("error", "There's no user with that specific email registered in our database!");
             return jwt;
         }
 
@@ -63,7 +72,7 @@ public class AuthServiceImpl implements IAuthService {
         List<UserEntity> getAllusers = repo.findAll();
         for(UserEntity u : getAllusers){
             if(u.getEmail().equals(user.getEmail())){
-                response.setError(response.getError() + 1);
+                response.setError(1);
                 response.setMessage("There is already a user with that email/username!");
                 return response;
             }

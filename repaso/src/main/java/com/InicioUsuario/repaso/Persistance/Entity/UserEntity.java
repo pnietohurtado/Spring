@@ -86,4 +86,13 @@ public class UserEntity implements UserDetails {
     public String getUsername() {
         return this.username;
     }
+
+
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nEmail: ").append(this.email).append(" Username: ").append(this.username)
+                .append(" Password: ").append(this.password).append("\n");
+        return sb.toString();
+    }
 }

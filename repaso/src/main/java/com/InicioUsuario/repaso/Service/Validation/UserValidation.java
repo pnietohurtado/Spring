@@ -29,8 +29,7 @@ public class UserValidation
         }
 
         if(user.getEmail() == null ||
-                user.getEmail().length() > 20 ||
-                user.getEmail().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
+                !user.getEmail().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
             response.setError(response.getError() + 1 );
             response.setMessage("The email's format is invalid! TRY AGAIN!");
         }
@@ -38,7 +37,7 @@ public class UserValidation
         if(user.getPassword() == null ||
                 user.getPassword().length() < 3 ||
                 user.getPassword().length() > 20 ||
-                user.getPassword().matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,16}$")){
+                !user.getPassword().matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,16}$")){
             response.setError(response.getError() + 1);
             response.setMessage("The password's format is invalid! You must try it again!");
         }
