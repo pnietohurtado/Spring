@@ -24,28 +24,30 @@ public class SecurityConfig {
     private IJWTUtilityService service;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http){
-        return http
-                .csrf(httpSecurityCsrfConfigurer ->
-                        httpSecurityCsrfConfigurer.disable()
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/auth/**",
+                                "/user/findAll",
+                                "/user/findAll/**"
+                        ).permitAll()
+                        .anyRequest().authenticated()
                 )
-                .authorizeHttpRequests(authRequest -> // Dentrode este método es donde se deberían de añadir los roles a la hora de entrar en el servidor
-                        authRequest
-                                .requestMatchers("/auth/**", "/user/findAll").permitAll() // Estas rutas serán públicas gracias al permitAll()
-                                .anyRequest().authenticated()
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .sessionManagement(sessionManager ->
-                        sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .addFilterBefore(new JWTAuthorizationFilter(service),
+                        UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                                    "Unauthorized");
+                        })
+                );
 
-                )
-                .addFilterBefore(new JWTAuthorizationFilter(service), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
-
-                        httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint((request, response, authException) -> {
-
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized!");
-
-                        })).build();
+        return http.build();
     }
 
     @Bean
