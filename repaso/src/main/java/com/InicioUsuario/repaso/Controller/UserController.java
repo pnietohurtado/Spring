@@ -3,6 +3,7 @@ package com.InicioUsuario.repaso.Controller;
 import com.InicioUsuario.repaso.Persistance.Entity.UserEntity;
 import com.InicioUsuario.repaso.Service.Impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ public class UserController {
     private UserServiceImpl service;
 
     @GetMapping("/findAll")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     public List<UserEntity> findAllUsers(){
         return service.findAllUsers();
     }
