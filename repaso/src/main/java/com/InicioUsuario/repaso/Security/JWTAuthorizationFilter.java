@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -29,26 +30,31 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
         String requestUri = request.getRequestURI();
 
-
-        if(requestUri.startsWith("/auth/") ||
-                requestUri.equals("/user/findAll") ||
-                requestUri.startsWith("/user/findAll/")){
+        // Solo permitir rutas públicas sin token
+        if(requestUri.startsWith("/auth/")){
             filterChain.doFilter(request,response);
             return;
         }
 
+        // Para TODAS las demás rutas, incluyendo /user/, requerir token
         if(header == null || !header.startsWith("Bearer ")){
-            filterChain.doFilter(request, response);
-            return;  // Para que termine el método ya que ya lo ha comprobado
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token JWT requerido");
+            return;
         }
 
-        String token = header.substring(7);
+        try {
+            String token = header.substring(7);
+            JWTClaimsSet claims = service.parseJWT(token);
 
-        JWTClaimsSet claims = service.parseJWT(token);
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(claims.getSubject(), null, Collections.emptyList());
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(claims.getSubject(), null, Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token JWT inválido o expirado: " + e.getMessage());
+        }
     }
 }
