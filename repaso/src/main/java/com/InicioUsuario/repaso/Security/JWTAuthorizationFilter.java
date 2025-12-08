@@ -34,24 +34,12 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         String requestUri = request.getRequestURI();
         String header = request.getHeader("Authorization");
 
-        System.out.println("=== JWT FILTER START ===");
-        System.out.println("URI: " + requestUri);
-        System.out.println("Authorization Header: " + header);
-
-        // Rutas públicas
-        if (requestUri.startsWith("/auth/")) {
+        if (requestUri.startsWith("/auth/")) { // Esta ruta no necesita autenticación de TOKEN para que el usuario pueda acceder
             System.out.println("Ruta pública /auth/ - permitiendo sin token");
             filterChain.doFilter(request, response);
             return;
         }
 
-        if (requestUri.equals("/api/findAll") || requestUri.startsWith("/api/findAll/") ) {
-            System.out.println("Ruta pública /api/findAll - permitiendo sin token");
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        // Para rutas protegidas, validar token
         if (header == null || !header.startsWith("Bearer ")) {
             System.out.println("ERROR: No Bearer token found for protected route");
             filterChain.doFilter(request, response);
@@ -66,7 +54,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             JWTClaimsSet claims = service.parseJWT(token);
             System.out.println("Token válido para usuario: " + claims.getSubject());
 
-            // Crear autenticación
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             claims.getSubject(),
