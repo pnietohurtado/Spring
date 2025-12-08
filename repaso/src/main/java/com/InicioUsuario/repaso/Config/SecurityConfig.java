@@ -31,8 +31,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/auth/**",
-                                "/user/findAll",
-                                "/user/findAll/**",
+                                "/api/findAll",
                                 "/error"  // AÑADE ESTA LÍNEA
                         ).permitAll()
                         .anyRequest().authenticated()

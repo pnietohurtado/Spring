@@ -45,9 +45,8 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (requestUri.equals("/user/findAll") || requestUri.startsWith("/user/findAll/") ||
-                requestUri.equals("/user/user/findAll") || requestUri.startsWith("/user/user/findAll/") ) {
-            System.out.println("Ruta pública /user/findAll - permitiendo sin token");
+        if (requestUri.equals("/api/findAll") || requestUri.startsWith("/api/findAll/") ) {
+            System.out.println("Ruta pública /api/findAll - permitiendo sin token");
             filterChain.doFilter(request, response);
             return;
         }

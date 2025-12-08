@@ -22,6 +22,13 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedHeaders("Origin" , "Content-Type", "Accept", "Authorization")
                 .allowCredentials(false)
                 .maxAge(3600);
+
+        registry.addMapping("/api/**") // Dirigido a todas las URL (Rutas públicas)
+                .allowedOrigins("http://localhost:4200") // Quiere decir que se acepta todos los tipos de rutas (Podemos hacer lo mismo con los métodos)
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") // PUT modificación completa y PATCH modificación parcial
+                .allowedHeaders("Origin" , "Content-Type", "Accept", "Authorization")
+                .allowCredentials(false)
+                .maxAge(3600);
     }
 
 }
