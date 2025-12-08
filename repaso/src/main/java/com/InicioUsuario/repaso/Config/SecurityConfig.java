@@ -32,23 +32,40 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/auth/**",
                                 "/user/findAll",
-                                "/user/findAll/**"
+                                "/user/findAll/**",
+                                "/error"  // AÑADE ESTA LÍNEA
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .addFilterBefore(new JWTAuthorizationFilter(service),
+                .addFilterBefore(jwtAuthorizationFilter(),
                         UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-                                    "Unauthorized");
+                            System.out.println("=== AUTHENTICATION ENTRY POINT ===");
+                            System.out.println("URI: " + request.getRequestURI());
+                            System.out.println("Auth Exception: " + authException.getMessage());
+
+                            // Envía un JSON de error más informativo
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write(
+                                    "{\"error\": \"Unauthorized\", " +
+                                            "\"message\": \"" + authException.getMessage() + "\", " +
+                                            "\"path\": \"" + request.getRequestURI() + "\"}"
+                            );
                         })
                 );
 
         return http.build();
+    }
+
+    @Bean
+    public JWTAuthorizationFilter jwtAuthorizationFilter() {
+        System.out.println("Creando bean JWTAuthorizationFilter");
+        return new JWTAuthorizationFilter(service);
     }
 
     @Bean

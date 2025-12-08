@@ -26,35 +26,75 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String header = request.getHeader("Authorization");
-        String requestUri = request.getRequestURI();
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
 
-        // Solo permitir rutas públicas sin token
-        if(requestUri.startsWith("/auth/")){
-            filterChain.doFilter(request,response);
+        String requestUri = request.getRequestURI();
+        String header = request.getHeader("Authorization");
+
+        System.out.println("=== JWT FILTER START ===");
+        System.out.println("URI: " + requestUri);
+        System.out.println("Authorization Header: " + header);
+
+        // Rutas públicas
+        if (requestUri.startsWith("/auth/")) {
+            System.out.println("Ruta pública /auth/ - permitiendo sin token");
+            filterChain.doFilter(request, response);
             return;
         }
 
-        // Para TODAS las demás rutas, incluyendo /user/, requerir token
-        if(header == null || !header.startsWith("Bearer ")){
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token JWT requerido");
+        if (requestUri.equals("/user/findAll") || requestUri.startsWith("/user/findAll/") ||
+                requestUri.equals("/user/user/findAll") || requestUri.startsWith("/user/user/findAll/") ) {
+            System.out.println("Ruta pública /user/findAll - permitiendo sin token");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // Para rutas protegidas, validar token
+        if (header == null || !header.startsWith("Bearer ")) {
+            System.out.println("ERROR: No Bearer token found for protected route");
+            filterChain.doFilter(request, response);
             return;
         }
 
         try {
             String token = header.substring(7);
-            JWTClaimsSet claims = service.parseJWT(token);
+            System.out.println("Token recibido (primeros 30 chars): " +
+                    token.substring(0, Math.min(30, token.length())) + "...");
 
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(claims.getSubject(), null, Collections.emptyList());
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            JWTClaimsSet claims = service.parseJWT(token);
+            System.out.println("Token válido para usuario: " + claims.getSubject());
+
+            // Crear autenticación
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            claims.getSubject(),
+                            null,
+                            Collections.emptyList()
+                    );
+
+            // Establecer en contexto de seguridad
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println("Autenticación establecida en SecurityContext");
+            System.out.println("Contexto después de establecer: " +
+                    SecurityContextHolder.getContext().getAuthentication());
 
             filterChain.doFilter(request, response);
+
+            // Verificar después de la cadena de filtros
+            System.out.println("Contexto después de doFilter: " +
+                    SecurityContextHolder.getContext().getAuthentication());
+
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token JWT inválido o expirado: " + e.getMessage());
+            System.out.println("ERROR validando token: " + e.getMessage());
+            e.printStackTrace();
+            // Limpiar contexto por seguridad
+            SecurityContextHolder.clearContext();
+            filterChain.doFilter(request, response);
         }
+
+        System.out.println("=== JWT FILTER END ===\n");
     }
 }
