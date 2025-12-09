@@ -25,22 +25,13 @@ public class UserController {
     private UserServiceImpl service;
 
     @GetMapping("/findAll")
-    //@PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<UserEntity> findAllUsers(){
-
-        /*
-        if(hasRole("ROLE_ADMIN")){
-            System.out.println("Hi, you has access");
-            return service.findAllUsers();
-        }else{
-            System.out.println("You dont!");
-        }
-        */
-
+        System.out.println("Function executed correctly!");
         return service.findAllUsers();
     }
 
-
+    /*
     private boolean hasRole(String role){
         SecurityContext context = SecurityContextHolder.getContext();
 
@@ -62,5 +53,7 @@ public class UserController {
         }
         return false;
     }
+    */
+
 
 }

@@ -34,7 +34,7 @@ public class SecurityConfig {
                                 "/api/findAll",
                                 "/error"  // AÑADE ESTA LÍNEA
                         ).permitAll()
-                        .requestMatchers("/api/findAll").hasAuthority("ADMIN")
+                        //.requestMatchers("/api/findAll").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
