@@ -25,35 +25,13 @@ public class UserController {
     private UserServiceImpl service;
 
     @GetMapping("/findAll")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public List<UserEntity> findAllUsers(){
         System.out.println("Function executed correctly!");
         return service.findAllUsers();
     }
 
-    /*
-    private boolean hasRole(String role){
-        SecurityContext context = SecurityContextHolder.getContext();
 
-        if(context == null){
-            return false;
-        }
-
-        Authentication auth = context.getAuthentication();
-
-        if(auth == null){
-            return false;
-        }
-
-        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-        for(GrantedAuthority authority : authorities){
-            if(role.equals(authority.getAuthority())){
-                return true;
-            }
-        }
-        return false;
-    }
-    */
 
 
 }

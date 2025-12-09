@@ -76,7 +76,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String authority = this.role.name();
+        String authority = this.role.name(); // Siempre va a empezar con "ROLE_" ...
         if (!authority.startsWith("ROLE_")) {
             authority = "ROLE_" + authority;
         }

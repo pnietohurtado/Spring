@@ -45,14 +45,12 @@ public class JWTUtilityServiceImpl implements IJWTUtilityService {
 
         Date now = new Date();
 
-        // Construir el JWT incluyendo los roles
         JWTClaimsSet.Builder claimsBuilder = new JWTClaimsSet.Builder()
                 .subject(uuid.toString())
                 .claim("username", username)  // Añadir username como claim separada
                 .issueTime(now)
                 .expirationTime(new Date(now.getTime() + 14400000));
 
-        // Añadir los roles como claim
         if (roles != null && !roles.isEmpty()) {
             claimsBuilder.claim("roles", roles);
         }

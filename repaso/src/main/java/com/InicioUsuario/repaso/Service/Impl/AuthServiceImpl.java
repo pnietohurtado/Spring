@@ -41,21 +41,16 @@ public class AuthServiceImpl implements IAuthService {
         }
 
         if(user.isEmpty()){
-            jwt.put("error", identifier.equals("username")
-                    ? "There's no user with that specific username on the database!"
-                    : "There's no user with that specific email registered in our database!");
+            jwt.put("error", "There's no such user in the database!");
             return jwt;
         }
 
-        // Verificación de la contraseña
         if(verifyPassword(login.getPassword(), user.get().getPassword())){
-            // *** CAMBIO AQUÍ: Pasar el rol del usuario al generar el token ***
             UserEntity userEntity = user.get();
-            List<String> roles = userEntity.getAuthorities().stream()
+            List<String> roles = userEntity.getAuthorities().stream() // Se encarga de ver la lista de todos los roles posibles
                     .map(authority -> authority.getAuthority())
                     .collect(Collectors.toList());
 
-            // Modifica esta línea para incluir roles
             jwt.put("jwt", service.generateJWT(userEntity.getUuid(), userEntity.getUsername(), roles));
         } else {
             jwt.put("error", "Not matching passwords!");
