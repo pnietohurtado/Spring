@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements IAuthService {
@@ -29,36 +30,39 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public HashMap<String, String> login(LoginDTO login, String identifier) throws Exception {
-
-        // Instancioamos el Hashmap que más tarde vamos a retornar
         HashMap<String, String> jwt = new HashMap<>();
         Optional<UserEntity> user = null;
 
         if(identifier.equals("username")) {
-            user = repo.findUserByUser(login.getUsername()); // Puede no devolvernos nada
-        } if(identifier.equals("email")){
+            user = repo.findUserByUser(login.getUsername());
+        }
+        if(identifier.equals("email")){
             user = repo.findUserByEmail(login.getEmail());
         }
 
-        if(user.isEmpty() && identifier.equals("username")){
-            jwt.put("error", "There's no user with that specific username on the database!");
-            return jwt;
-        } if(user.isEmpty() && identifier.equals("email")){
-            jwt.put("error", "There's no user with that specific email registered in our database!");
+        if(user.isEmpty()){
+            jwt.put("error", identifier.equals("username")
+                    ? "There's no user with that specific username on the database!"
+                    : "There's no user with that specific email registered in our database!");
             return jwt;
         }
 
         // Verificación de la contraseña
         if(verifyPassword(login.getPassword(), user.get().getPassword())){
-            jwt.put("jwt", service.generateJWT(user.get().getUuid()));
-        }else{
+            // *** CAMBIO AQUÍ: Pasar el rol del usuario al generar el token ***
+            UserEntity userEntity = user.get();
+            List<String> roles = userEntity.getAuthorities().stream()
+                    .map(authority -> authority.getAuthority())
+                    .collect(Collectors.toList());
+
+            // Modifica esta línea para incluir roles
+            jwt.put("jwt", service.generateJWT(userEntity.getUuid(), userEntity.getUsername(), roles));
+        } else {
             jwt.put("error", "Not matching passwords!");
             return jwt;
         }
 
         return jwt;
-
-
     }
 
     @Override

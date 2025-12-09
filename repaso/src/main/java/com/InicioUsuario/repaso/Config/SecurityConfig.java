@@ -34,7 +34,7 @@ public class SecurityConfig {
                                 "/api/findAll",
                                 "/error"  // AÑADE ESTA LÍNEA
                         ).permitAll()
-                        //.requestMatchers("/api/findAll").hasAuthority("ADMIN")
+                        .requestMatchers("/api/findAll").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -44,9 +44,6 @@ public class SecurityConfig {
                         UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
-                            System.out.println("=== AUTHENTICATION ENTRY POINT ===");
-                            System.out.println("URI: " + request.getRequestURI());
-                            System.out.println("Auth Exception: " + authException.getMessage());
 
                             // Envía un JSON de error más informativo
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

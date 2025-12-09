@@ -10,11 +10,15 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
@@ -34,53 +38,57 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         String requestUri = request.getRequestURI();
         String header = request.getHeader("Authorization");
 
-        if (requestUri.startsWith("/auth/")) { // Esta ruta no necesita autenticación de TOKEN para que el usuario pueda acceder
-            System.out.println("Ruta pública /auth/ - permitiendo sin token");
+        if (requestUri.startsWith("/auth/")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         if (header == null || !header.startsWith("Bearer ")) {
-            System.out.println("ERROR: No Bearer token found for protected route");
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
             String token = header.substring(7);
-            System.out.println("Token recibido (primeros 30 chars): " +
-                    token.substring(0, Math.min(30, token.length())) + "...");
-
             JWTClaimsSet claims = service.parseJWT(token);
-            System.out.println("Token válido para usuario: " + claims.getSubject());
+
+            // Extraer autoridades del token
+            List<String> roles = claims.getStringListClaim("roles");
+            List<GrantedAuthority> authorities = roles.stream()
+                    .map(role -> {
+                        // Asegurar que los roles tengan el prefijo ROLE_ si es necesario
+                        if (!role.startsWith("ROLE_")) {
+                            role = "ROLE_" + role;
+                        }
+                        return new SimpleGrantedAuthority(role);
+                    })
+                    .collect(Collectors.toList());
+
+            System.out.println("Usuario: " + claims.getSubject());
+            System.out.println("Roles extraídos del token: " + roles);
+            System.out.println("Authorities creadas: " + authorities);
 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             claims.getSubject(),
                             null,
-                            Collections.emptyList()
+                            authorities  // ← ¡Ahora con autoridades reales!
                     );
 
-            // Establecer en contexto de seguridad
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println("Autenticación establecida en SecurityContext");
-            System.out.println("Contexto después de establecer: " +
-                    SecurityContextHolder.getContext().getAuthentication());
+            System.out.println("Autenticación establecida: " + authentication);
 
             filterChain.doFilter(request, response);
-
-            // Verificar después de la cadena de filtros
-            System.out.println("Contexto después de doFilter: " +
-                    SecurityContextHolder.getContext().getAuthentication());
 
         } catch (Exception e) {
             System.out.println("ERROR validando token: " + e.getMessage());
             e.printStackTrace();
-            // Limpiar contexto por seguridad
             SecurityContextHolder.clearContext();
-            filterChain.doFilter(request, response);
-        }
 
-        System.out.println("=== JWT FILTER END ===\n");
+            // Responder con 401 en lugar de continuar
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Invalid token\", \"message\": \"" + e.getMessage() + "\"}");
+        }
     }
 }

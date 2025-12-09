@@ -26,6 +26,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.text.ParseException;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class JWTUtilityServiceImpl implements IJWTUtilityService {
@@ -38,16 +39,25 @@ public class JWTUtilityServiceImpl implements IJWTUtilityService {
 
 
     @Override
-    public String generateJWT(Long uuid) {
+    public String generateJWT(Long uuid, String username, List<String> roles) {
         PrivateKey privateKey = loadPrivateKey(privateKeyResource);
-
         JWSSigner signer = new RSASSASigner(privateKey);
+
         Date now = new Date();
-        JWTClaimsSet claimSet = new JWTClaimsSet.Builder()
+
+        // Construir el JWT incluyendo los roles
+        JWTClaimsSet.Builder claimsBuilder = new JWTClaimsSet.Builder()
                 .subject(uuid.toString())
+                .claim("username", username)  // Añadir username como claim separada
                 .issueTime(now)
-                .expirationTime(new Date(now.getTime() + 14400000)) // El tiempo que va a permanecer la sesión iniciada sin tener que volver a iniciarla
-                .build();
+                .expirationTime(new Date(now.getTime() + 14400000));
+
+        // Añadir los roles como claim
+        if (roles != null && !roles.isEmpty()) {
+            claimsBuilder.claim("roles", roles);
+        }
+
+        JWTClaimsSet claimSet = claimsBuilder.build();
 
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimSet);
         try {

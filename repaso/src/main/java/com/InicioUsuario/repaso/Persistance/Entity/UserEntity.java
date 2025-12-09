@@ -76,7 +76,11 @@ public class UserEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.role.name()));
+        String authority = this.role.name();
+        if (!authority.startsWith("ROLE_")) {
+            authority = "ROLE_" + authority;
+        }
+        return List.of(new SimpleGrantedAuthority(authority));
     }
 
     @Override
