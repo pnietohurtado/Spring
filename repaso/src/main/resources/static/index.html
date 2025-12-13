@@ -566,7 +566,7 @@
 
     // Configuración de roles y permisos
     const ROLE_CONFIG = {
-        'ADMIN': {
+        'ROLE_ADMIN': {
             title: 'Administrador',
             icon: '👑',
             description: 'Tienes acceso completo al sistema',
@@ -579,7 +579,7 @@
             ],
             redirectUrl: '/admin/dashboard.html'
         },
-        'USER': {
+        'ROLE_USER': {
             title: 'Usuario',
             icon: '👤',
             description: 'Acceso básico al sistema',
@@ -684,13 +684,13 @@
             const user = usernameInput.value.toLowerCase() || emailInput.value.toLowerCase();
 
             // Lógica de simulación de roles
-            if (user.includes('admin')) return 'ADMIN';
+            if (user.includes('admin')) return 'ROLE_ADMIN';
             if (user.includes('editor')) return 'EDITOR';
             if (user.includes('viewer')) return 'VIEWER';
-            return 'USER'; // Rol por defecto
+            return 'ROLE_USER'; // Rol por defecto
         } catch (error) {
             console.error('Error al extraer rol:', error);
-            return 'USER';
+            return 'ROLE_USER';
         }
     }
 
