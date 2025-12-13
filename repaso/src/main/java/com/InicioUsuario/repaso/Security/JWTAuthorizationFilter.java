@@ -1,5 +1,6 @@
 package com.InicioUsuario.repaso.Security;
 
+import com.InicioUsuario.repaso.Global.GlobalValues;
 import com.InicioUsuario.repaso.Service.Interface.IJWTUtilityService;
 import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.servlet.FilterChain;
@@ -24,6 +25,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     @Autowired
     private IJWTUtilityService service;
+
 
     public JWTAuthorizationFilter(IJWTUtilityService ijwtUtilityService){
         this.service = ijwtUtilityService;
@@ -52,31 +54,28 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             String token = header.substring(7);
             JWTClaimsSet claims = service.parseJWT(token);
 
-            // Extraer autoridades del token
+
             List<String> roles = claims.getStringListClaim("roles");
             List<GrantedAuthority> authorities = roles.stream()
                     .map(role -> {
                         // Asegurar que los roles tengan el prefijo ROLE_ si es necesario
                         if (!role.startsWith("ROLE_")) {
                             role = "ROLE_" + role;
+                            GlobalValues.role_user = role;
                         }
                         return new SimpleGrantedAuthority(role);
                     })
                     .collect(Collectors.toList());
 
-            System.out.println("Usuario: " + claims.getSubject());
-            System.out.println("Roles extraídos del token: " + roles);
-            System.out.println("Authorities creadas: " + authorities);
 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             claims.getSubject(),
                             null,
-                            authorities  // ← ¡Ahora con autoridades reales!
+                            authorities
                     );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println("Autenticación establecida: " + authentication);
 
             filterChain.doFilter(request, response);
 

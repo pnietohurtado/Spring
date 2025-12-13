@@ -1,6 +1,8 @@
 package com.InicioUsuario.repaso.Controller;
 
+import com.InicioUsuario.repaso.Global.GlobalValues;
 import com.InicioUsuario.repaso.Persistance.Entity.UserEntity;
+import com.InicioUsuario.repaso.Security.JWTAuthorizationFilter;
 import com.InicioUsuario.repaso.Service.DTO.LoginDTO;
 import com.InicioUsuario.repaso.Service.DTO.ResponseDTO;
 import com.InicioUsuario.repaso.Service.Impl.AuthServiceImpl;
@@ -43,6 +45,10 @@ public class AuthController {
             }
 
             if(log.containsKey("jwt")){
+                /*if(GlobalValues.role_user.equals("ROLE_ADMIN")){
+                    System.out.println("Moving into the developer web configuration!");
+                }*/
+
                 return new ResponseEntity(log, HttpStatus.OK);
             }
             System.out.println(log.get("error"));
