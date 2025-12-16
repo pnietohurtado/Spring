@@ -1,14 +1,13 @@
-package com.openwebinars.demo;
+package com.websocket.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DemoApplication {
+public class WebSocket2Application {
 
 	public static void main(String[] args) {
-		//System.out.println("Hola mundo!");
-		SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(WebSocket2Application.class, args);
 	}
 
 }
