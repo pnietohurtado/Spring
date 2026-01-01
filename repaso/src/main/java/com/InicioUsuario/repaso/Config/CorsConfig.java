@@ -9,8 +9,14 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry){
-        registry.addMapping("/**") // Dirigido a todas las URL (Rutas privadas)
-                .allowedOrigins("http://localhost:4200")
+        registry.addMapping("/auth/login") // Dirigido a todas las URL (Rutas privadas)
+                .allowedOrigins("http://127.0.0.1:5500")
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") // PUT modificación completa y PATCH modificación parcial
+                .allowedHeaders("Origin" , "Content-Type", "Accept", "Authorization")
+                .allowCredentials(true)
+                .maxAge(3600);
+        registry.addMapping("/auth/register") // Dirigido a todas las URL (Rutas privadas)
+                .allowedOrigins("http://127.0.0.1:5500")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") // PUT modificación completa y PATCH modificación parcial
                 .allowedHeaders("Origin" , "Content-Type", "Accept", "Authorization")
                 .allowCredentials(true)

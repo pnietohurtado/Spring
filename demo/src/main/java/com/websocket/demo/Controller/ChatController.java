@@ -16,9 +16,9 @@ public class ChatController {
     }
 
 
-    @GetMapping("/chat")
-    public String chat(){
-        return "chat";
+    @GetMapping("/chat-page")  // <-- CAMBIADO
+    public String chat() {
+        return "chat"; // Esto buscará chat.html en templates/
     }
 
 }
