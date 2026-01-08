@@ -5,46 +5,38 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class CorsConfig implements WebMvcConfigurer
-
-{
+public class CorsConfig implements WebMvcConfigurer {
 
     @Override
-    public void addCorsMappings(CorsRegistry registry){
-        registry.addMapping("/**") // Dirigido a todas las URL (Rutas privadas)
-                .allowedOrigins("http://localhost:63342")
-                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") // PUT modificación completa y PATCH modificación parcial
-                .allowedHeaders("Origin" , "Content-Type", "Accept", "Authorization")
-                .allowCredentials(true)
-                .maxAge(3600);
-        registry.addMapping("/chat") // Dirigido a todas las URL (Rutas privadas)
-                .allowedOrigins("http://127.0.0.1:5500")
-                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") // PUT modificación completa y PATCH modificación parcial
-                .allowedHeaders("Origin" , "Content-Type", "Accept", "Authorization")
-                .allowCredentials(true)
-                .maxAge(3600);
-
-        registry.addMapping("/**") // Dirigido a todas las URL (Rutas privadas)
-                .allowedOrigins("http://localhost:63342")
-                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") // PUT modificación completa y PATCH modificación parcial
-                .allowedHeaders("Origin" , "Content-Type", "Accept", "Authorization")
+    public void addCorsMappings(CorsRegistry registry) {
+        // Para todas las rutas (incluyendo WebSocket endpoints)
+        registry.addMapping("/**")
+                .allowedOrigins(
+                        "http://localhost:4200",
+                        "http://127.0.0.1:5500",  // Añade esto
+                        "http://localhost:5500",   // Y esto por si acaso
+                        "http://localhost:63342"
+                )
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("*") // Cambia a "*" para permitir todos los headers
+                .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")
                 .allowCredentials(true)
                 .maxAge(3600);
 
-        registry.addMapping("/auth/**") // Dirigido a todas las URL (Rutas públicas)
-                .allowedOrigins("http://localhost:4200") // Quiere decir que se acepta todos los tipos de rutas (Podemos hacer lo mismo con los métodos)
-                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") // PUT modificación completa y PATCH modificación parcial
-                .allowedHeaders("Origin" , "Content-Type", "Accept", "Authorization")
-                .allowCredentials(false)
+        // Configuración específica para auth
+        registry.addMapping("/auth/**")
+                .allowedOrigins("http://localhost:4200", "http://127.0.0.1:5500")
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)
                 .maxAge(3600);
 
-        registry.addMapping("/api/**") // Dirigido a todas las URL (Rutas públicas)
-                .allowedOrigins("http://localhost:4200") // Quiere decir que se acepta todos los tipos de rutas (Podemos hacer lo mismo con los métodos)
-                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") // PUT modificación completa y PATCH modificación parcial
-                .allowedHeaders("Origin" , "Content-Type", "Accept", "Authorization")
-                .allowCredentials(false)
+        // Configuración específica para API
+        registry.addMapping("/api/**")
+                .allowedOrigins("http://localhost:4200", "http://127.0.0.1:5500")
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)
                 .maxAge(3600);
-
     }
-
 }
