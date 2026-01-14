@@ -13,30 +13,48 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(
                         "http://localhost:4200",
-                        "http://127.0.0.1:5500",  // Añade esto
-                        "http://localhost:5500",   // Y esto por si acaso
+                        "http://127.0.0.1:5500",
+                        "http://localhost:5500",
                         "http://localhost:63342"
                 )
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                .allowedHeaders("*") // Cambia a "*" para permitir todos los headers
+                .allowedHeaders("*")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")
                 .allowCredentials(true)
                 .maxAge(3600);
 
-        // Configuración específica para auth
-        registry.addMapping("/auth/**")
-                .allowedOrigins("http://localhost:4200", "http://127.0.0.1:5500")
+        registry.addMapping("/auth/login")
+                .allowedOrigins("http://127.0.0.1:5500")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
+                .allowedHeaders("Origin" , "Content-Type", "Accept", "Authorization")
+                .allowCredentials(true)
+                .maxAge(3600);
+        registry.addMapping("/auth/register")
+                .allowedOrigins("http://127.0.0.1:5500")
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("Origin" , "Content-Type", "Accept", "Authorization")
                 .allowCredentials(true)
                 .maxAge(3600);
 
-        // Configuración específica para API
-        registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:4200", "http://127.0.0.1:5500")
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:63342")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
+                .allowedHeaders("Origin" , "Content-Type", "Accept", "Authorization")
                 .allowCredentials(true)
+                .maxAge(3600);
+
+        registry.addMapping("/auth/**")
+                .allowedOrigins("http://localhost:4200")
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("Origin" , "Content-Type", "Accept", "Authorization")
+                .allowCredentials(false)
+                .maxAge(3600);
+
+        registry.addMapping("/api/**")
+                .allowedOrigins("http://localhost:4200")
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") 
+                .allowedHeaders("Origin" , "Content-Type", "Accept", "Authorization")
+                .allowCredentials(false)
                 .maxAge(3600);
     }
 }
