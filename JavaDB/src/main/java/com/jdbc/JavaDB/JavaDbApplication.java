@@ -1,7 +1,7 @@
-package com.jdbc.JavaDB;
+package com.jdbc.javaDB;
 
-import com.jdbc.JavaDB.models.Student;
-import com.jdbc.JavaDB.service.StudentService;
+import com.jdbc.javaDB.models.Student;
+import com.jdbc.javaDB.service.StudentService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;

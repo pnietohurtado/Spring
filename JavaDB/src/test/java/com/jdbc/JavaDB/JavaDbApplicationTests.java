@@ -1,4 +1,4 @@
-package com.jdbc.JavaDB;
+package com.jdbc.javaDB;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
