@@ -4,6 +4,8 @@ import com.jdbc.JavaDB.application.port.out.UserRepositoryPortOutput;
 import com.jdbc.JavaDB.domain.model.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class JpaUserRepositoryAdapter implements UserRepositoryPortOutput {
 
@@ -18,5 +20,12 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPortOutput {
         UserEntity userEntity = new UserEntity(user.id(), user.fistName(), user.lastName());
         final UserEntity savedUser = springDataUserRepository.save(userEntity);
         return new User(savedUser.id(), savedUser.getFirstnName(), savedUser.getLastName());
+    }
+
+    @Override
+    public Optional<User> getById(Long id) {
+        final Optional<UserEntity> savedUser = springDataUserRepository.findById(id);
+        return Optional.of(new User(savedUser.get().id(), savedUser.get().getFirstnName(), savedUser.get().getLastName()));
+
     }
 }

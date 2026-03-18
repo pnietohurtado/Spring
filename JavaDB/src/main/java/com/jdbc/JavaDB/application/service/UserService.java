@@ -1,12 +1,15 @@
 package com.jdbc.JavaDB.application.service;
 
 import com.jdbc.JavaDB.application.port.in.CreateUserUseCase;
+import com.jdbc.JavaDB.application.port.in.GetUserUseCase;
 import com.jdbc.JavaDB.application.port.out.UserRepositoryPortOutput;
 import com.jdbc.JavaDB.domain.model.User;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
-public class UserService implements CreateUserUseCase
+public class UserService implements CreateUserUseCase, GetUserUseCase
     /*Implementación de la interfaz donde vamos a ejecutar las funciones de entrada como
     * lo puede ser la creación de un nuevo usuario. En este caso nosotros solo llamamos a la
     * función, pero necesitamos que el "puerto de salida" (out) se encargue de enviar estos
@@ -23,5 +26,11 @@ public class UserService implements CreateUserUseCase
     @Override
     public User createUser(User user) {
         return out.save(user);
+    }
+
+
+    @Override
+    public Optional<User> findById(Long id) {
+        return out.getById(id);
     }
 }
