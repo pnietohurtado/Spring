@@ -24,7 +24,7 @@ public class UserController {
     }
 
 
-    @PostMapping
+    @PostMapping("/user")
     public User createUser(@RequestBody UserRequest userRequest ){
         final User user = new User(null, userRequest.firstName(), userRequest.lastName());
         return createUserUseCase.createUser(user);
@@ -33,11 +33,13 @@ public class UserController {
     @GetMapping("/{id}")
     public UserResponse getUser(@PathVariable Long id){
         final Optional<User> user = getUserUseCase.findById(id);
-        return new UserResponse(user.get().id(), user.get().fistName(), user.get().lastName()); 
+        return new UserResponse(user.get().id(), user.get().fistName(), user.get().lastName());
     }
-
+/*
     @GetMapping
     public List<User> getAllUsers(){
         return getAllUserUseCase.findAll();
     }
+
+ */
 }

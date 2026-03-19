@@ -26,7 +26,7 @@ public class UserEntity {
         return id;
     }
 
-    public String getFirstnName(){
+    public String getFirstName(){
         return this.firstName;
     }
 

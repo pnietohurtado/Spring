@@ -18,21 +18,21 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPortOutput {
 
     @Override
     public User save(User user) {
-        User userEntity = new User(user.id(), user.fistName(), user.lastName());
-        final User savedUser = springDataUserRepository.save(userEntity);
-        return new User(savedUser.id(), savedUser.fistName(), savedUser.lastName());
+        UserEntity userEntity = new UserEntity(user.id(), user.fistName(), user.lastName());
+        final UserEntity savedUser = springDataUserRepository.save(userEntity);
+        return new User(savedUser.id(), savedUser.getFirstName(), savedUser.getLastName());
     }
 
     @Override
     public Optional<User> getById(Long id) {
-        final Optional<User> savedUser = springDataUserRepository.findById(id);
-        return Optional.of(new User(savedUser.get().id(), savedUser.get().fistName(), savedUser.get().lastName()));
+        final Optional<UserEntity> savedUser = springDataUserRepository.findById(id);
+        return Optional.of(new User(savedUser.get().id(), savedUser.get().getFirstName(), savedUser.get().getLastName()));
 
     }
 
     @Override
-    public List<User> findAll() {
-        final List<User> allUsersFound = springDataUserRepository.findAll();
-        return allUsersFound;
+    public Optional<List<UserEntity>> findAll() {
+        final List<UserEntity> allUsersFound = springDataUserRepository.findAll();
+        return Optional.of(allUsersFound);
     }
 }

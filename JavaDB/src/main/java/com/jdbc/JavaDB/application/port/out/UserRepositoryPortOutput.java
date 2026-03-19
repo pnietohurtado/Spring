@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface UserRepositoryPortOutput {
     User save(User user);
     Optional<User> getById(Long id);
-    List<User> findAll();
+    Optional<List<UserEntity>> findAll();
 }
